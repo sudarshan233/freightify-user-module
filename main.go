@@ -48,5 +48,41 @@ func main() {
 
 	})
 
+	app.Put("/api/users/:id", func(c *fiber.Ctx) error {
+		id := c.Params("id")
+
+		for i, user := range users {
+			if fmt.Sprint(user.ID) == id {
+				return c.Status(200).JSON(fiber.Map{
+					"msg":  `User of edited successfully!!`,
+					"user": user,
+					"id":   i,
+				})
+			}
+		}
+
+		return c.Status(404).JSON(fiber.Map{
+			"msg": "User not found",
+		})
+	})
+
+	app.Delete("/api/users/:id", func(c *fiber.Ctx) error {
+		id := c.Params("id")
+
+		for i, user := range users {
+			if fmt.Sprint(user.ID) == id {
+				return c.Status(200).JSON(fiber.Map{
+					"msg":  `User deleted successfully!!`,
+					"user": user,
+					"id":   i,
+				})
+			}
+		}
+
+		return c.Status(404).JSON(fiber.Map{
+			"msg": "User not found",
+		})
+	})
+
 	log.Fatal(app.Listen(":5000"))
 }
