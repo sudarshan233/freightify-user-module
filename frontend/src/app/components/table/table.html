@@ -1,0 +1,26 @@
+<table class="bg-white rounded">
+        <tr class="border-x-0 border-t-0 border-b border-gray-300">
+                <td class="py-4 px-14 font-bold">Name</td>
+                <td class="py-4 px-14 font-bold">Email</td>
+                <td class="py-4 px-14 font-bold">Role</td>
+                <td class="py-4 px-14 font-bold">Created On</td>
+                <td class="py-4 px-14 font-bold">Status</td>
+        </tr>
+        @for(user of users; track $index) {
+        <tr class="border-x-0 border-t-0 border-b border-gray-300">
+                <td class="py-4 px-14 font-extralight">{{user.name}}</td>
+                <td class="py-4 px-14 font-extralight">{{user.email}}</td>
+                <td class="py-4 px-14 font-extralight">{{user.role}}</td>
+                <td class="py-4 px-14 font-extralight">{{user.createdAt}}</td>
+                @if (user.status === "Active") {
+                        <td class="py-4 px-14 
+                        font-light text-green-500">{{user.status}}</td>
+                } @else {
+                        <td class="py-4 px-14 
+                        font-light text-red-500">{{user.status}}</td>
+                }
+                
+        </tr>
+        <hr />
+}
+</table>
