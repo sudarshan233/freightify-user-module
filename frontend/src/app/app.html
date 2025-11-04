@@ -1,11 +1,19 @@
-<app-create-user></app-create-user>
-<div class="px-24 py-10">
+<app-user-modal *ngIf="showUserModal"
+                [mode]="modalMode"
+                [selectedUserId]="selectedUserId"
+                class="w-1/3"
+(toggleOffUserModal)="toggleOffUserModal()"></app-user-modal>
+<div class="px-24 py-10 transition-all duration-300" [ngClass]="{
+    'opacity-40 pointer-events-none': showUserModal,
+  }">
   <div class="flex justify-between">
     <app-header class="text-2xl"></app-header>
-    <app-input-buttons class="flex gap-2"></app-input-buttons>
+    <app-input-buttons (toggleOnUserModal)="toggleOnUserModal($event)"
+    class="flex gap-2"></app-input-buttons>
   </div>
   <hr class="my-6"/>
   <div class="flex justify-center">
-    <app-table></app-table>
+    <app-table (toggleOnUserModal)="toggleOnUserModal($event)"
+    ></app-table>
   </div>
 </div>

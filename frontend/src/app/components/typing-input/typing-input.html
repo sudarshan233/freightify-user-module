@@ -1,0 +1,23 @@
+<div class="flex flex-col gap-2 w-full">
+    <label class="text-sm">{{ label }}</label>
+    @if (type === 'password' || input === 'password') {
+        <div class="flex relative">
+            <input class="text-sm p-2 w-full
+            border border-1 border-gray-300 rounded outline-0"
+            [type]="type" [placeholder]="placeholder"
+            (input)="onInputChange($event)"/>
+            @if (!showPassword) {
+                <lucide-icon [img]="EyeOff" class="opacity-50
+                absolute top-1/4 right-1" (click)="togglePassword()"></lucide-icon>
+            } @else {
+                <lucide-icon [img]="Eye" class="opacity-50
+                absolute top-1/4 right-1" (click)="togglePassword()"></lucide-icon>
+            }
+        </div>
+    } @else {
+        <input class="text-sm p-2 
+        border border-1 border-gray-300 rounded
+        outline-0" [type]="type" [placeholder]="placeholder"
+        (input)="onInputChange($event)"/>
+    }
+</div>

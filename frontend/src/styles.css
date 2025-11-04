@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Keep scrollbar always visible */
+.scrollbar-always::-webkit-scrollbar {
+  width: 8px; /* or any size */
+}
+
+.scrollbar-always::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.6);
+  border-radius: 4px;
+}
+
+.scrollbar-always::-webkit-scrollbar-track {
+  background: rgba(240, 240, 240, 0.8);
+}
+
+/* For Firefox */
+.scrollbar-always {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.6) rgba(240, 240, 240, 0.8);
+}

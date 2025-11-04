@@ -1,0 +1,121 @@
+<section class="bg-white px-4 py-6 absolute left-1/3 top-20 z-50
+rounded drop-shadow-2xl w-1/3 h-3/4">
+    <form (ngSubmit)="onSubmit($event)" class="flex flex-col gap-4 relative w-full h-full">
+        <div class="flex justify-between items-center w-full">
+            <h1 class="font-bold text-2xl">Create User</h1>
+            <button (click)="onCancelCreate($event)">
+                <lucide-icon [img]="X" class="size-8 mr-2 stroke-gray-400"
+                ></lucide-icon>
+            </button>
+        </div>
+        <hr />
+        <div class="flex gap-6">
+            <button class="px-6 py-2 text-blue-400
+            border-x-0 border-t-0 border-b-4 border-blue-400">GENERAL</button>
+        </div>
+        <div class="flex gap-4 p-4 w-full h-[75%] flex-wrap overflow-y-scroll
+        scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-white">
+            <app-dropdown class="w-[45%]" label="User Type"
+            [options]="userTypes"
+            (valueChange)="onUserTypeChange($event)"></app-dropdown>
+
+            <app-dropdown class="w-[45%]" label="User Role"
+            [options]="userRoles" 
+            (valueChange)="onUserRoleChange($event)"></app-dropdown>
+
+            <app-typing-input class="w-[45%]" label="First Name"
+            type="text" placeholder="First Name" 
+            (valueChange)="onFirstNameChange($event)"></app-typing-input>
+
+            <app-typing-input class="w-[45%]" label="Last Name"
+            type="text" placeholder="Last Name" 
+            (valueChange)="onLastNameChange($event)"></app-typing-input>
+
+            <app-typing-input class="w-[45%]" label="Phone Number"
+            type="tel" placeholder="Phone Number" 
+            (valueChange)="onPhoneNumberChange($event)"></app-typing-input>
+
+            <app-typing-input class="w-[45%]" label="Email ID"
+            type="email" placeholder="Email" 
+            (valueChange)="onEmailChange($event)"></app-typing-input>
+
+            <app-typing-input class="w-[45%]" label="Password"
+            type="password" input="password" placeholder="Password"
+            (valueChange)="onPasswordInput($event)"></app-typing-input>
+
+            <app-typing-input class="w-[45%]" label="Confirm Password"
+            type="password" input="password" placeholder="Confirm Password"
+            (valueChange)="onConfirmPassword($event)"></app-typing-input>
+
+            <app-password-strength-bar class="w-full" [password]="password"></app-password-strength-bar>
+
+            <app-password-criteria class="w-full" [password]="password"></app-password-criteria>
+
+            <app-dropdown class="w-[45%] mt-4" label="User Currency"
+            [options]="userCurrencies"
+            (valueChange)="onUserCurrencyChange($event)"></app-dropdown>
+
+            <app-dropdown class="w-[45%]" label="Number Format"
+            [options]="numberFormats" info="Select your number display format"
+            (valueChange)="onNumberFormatChange($event)"></app-dropdown>
+
+            <app-dropdown class="w-[45%]" label="Measurement System"
+            [options]="measurementSystems" 
+            info="Select your measurement unit display format"
+            (valueChange)="onMeasureChange($event)"></app-dropdown>
+
+            <app-dropdown class="w-[45%]" label="Decimal Places"
+            [options]="decimalPlaces" 
+            info="Select your measurement unit display format"
+            (valueChange)="onDecimalChange($event)"></app-dropdown>
+
+            <div class="w-3/4 flex flex-col gap-2 flex-wrap">
+                <label class="text-sm">User Status</label>
+                <div class="flex gap-2">
+                    <p class="text-sm font-light">Deactivate</p>
+                    <div id="user-stat-outer" class="w-14 h-6 rounded-xl 
+                    border px-0.5 relative"
+                    [ngClass]="{
+                        'border-blue-400': userStatus,
+                        'border-gray-400': !userStatus
+                    }">
+                        <button class="size-6" (click)="toggleUserStatus($event)">
+                                <div id="user-stat-btn" class="size-4 rounded-full 
+                                absolute top-0.5 transition-all ease-linear duration-500"
+                                [ngClass]="{
+                                    'bg-blue-400 right-1': userStatus,
+                                    'bg-gray-400 left-1': !userStatus
+                                }">
+
+                                </div>
+                        </button>
+                    </div>
+                    <p class="text-sm font-light">Activate</p>
+                </div>
+            </div>
+            <div class="w-3/4 flex flex-col gap-2">
+                <label class="text-sm">User Team</label>
+                <div class="flex gap-2">
+                    <label *ngFor="let team of userTeams" 
+                    class="text-sm font-light mr-4 flex items-center gap-1">
+                        <input type="checkbox" [(ngModel)]="team.checked" 
+                        name="userTeam" />
+                        {{ team.label }}
+                    </label>
+                </div>
+            </div>
+            
+        </div>
+        <div class="flex gap-2 px-4 self-end">
+                <button class="font-medium hover:text-slate-50 text-gray-400 
+                text-sm transition-colors duration-400
+                px-4 py-2 border border-gray-400 rounded
+                hover:bg-red-950"
+                (click)="onCancelCreate($event)">Cancel</button>
+                <button class="font-medium text-sm
+                px-4 py-2 rounded
+                hover:bg-lime-500 bg-lime-400 transition-colors duration-400"
+                type="submit">Submit</button>
+        </div>
+    </form>
+</section>

@@ -5,6 +5,7 @@
                 <td class="py-4 px-14 font-bold">Role</td>
                 <td class="py-4 px-14 font-bold">Created On</td>
                 <td class="py-4 px-14 font-bold">Status</td>
+                <td class="py-4 px-14 font-bold">Actions</td>
         </tr>
         @for(user of users; track $index) {
         <tr class="border-x-0 border-t-0 border-b border-gray-300">
@@ -13,13 +14,18 @@
                 <td class="py-4 px-14 font-extralight">{{user.role}}</td>
                 <td class="py-4 px-14 font-extralight">{{user.createdAt}}</td>
                 @if (user.status === "Active") {
-                        <td class="py-4 px-14 
+                        <td class="py-4 px-14
                         font-light text-green-500">{{user.status}}</td>
                 } @else {
-                        <td class="py-4 px-14 
+                        <td class="py-4 px-14
                         font-light text-red-500">{{user.status}}</td>
                 }
-                
+                <td class="py-4 px-14 font-extralight">
+                        <app-action [userId]="user.id || ''"
+                          (activateUserModal)="onClickUserModal($event)"
+                                    class="flex gap-2"></app-action>
+                </td>
+
         </tr>
         <hr />
 }

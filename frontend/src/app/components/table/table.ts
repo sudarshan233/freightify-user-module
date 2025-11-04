@@ -1,7 +1,9 @@
-import { Component, inject, numberAttribute } from '@angular/core';
+import {Component, EventEmitter, inject, Input, numberAttribute, Output} from '@angular/core';
 import { Api } from '../../service/api';
+import { Action } from '../action/action';
 
 type User = {
+  id?: string
   name: string
   email: string
   role: string
@@ -10,6 +12,7 @@ type User = {
 }
 
 type Response = {
+  _id: string
   usertype: string
   userRole: string
   firstName: string
@@ -31,12 +34,17 @@ type Response = {
 
 @Component({
   selector: 'app-table',
-  imports: [],
+  imports: [Action],
   templateUrl: './table.html',
   styleUrl: './table.css'
 })
 
 export class Table {
+  @Output() toggleOnUserModal = new EventEmitter<{
+    mode: 'edit' | 'view',
+    userId?: string
+    }>();
+
   users: User[] = []
   result:any = null;
 
@@ -55,11 +63,13 @@ export class Table {
           createdAt, userStatus
         } = user;
 
+
         const name: string = firstName + " " + lastName;
         const status: "Active" | "Inactive" = userStatus ? "Active" : "Inactive"
         const createdDate: Date = new Date(createdAt)
-        const formattedDate: string = createdDate.toISOString().split('T')[0] 
+        const formattedDate: string = createdDate.toISOString().split('T')[0]
         this.users.push({
+          id: user._id,
           name,
           email,
           role: userRole,
@@ -68,5 +78,12 @@ export class Table {
         })
       })
     })
+  }
+
+  onClickUserModal(e: {
+    mode: 'edit' | 'view',
+    userId?: string
+  }) {
+    this.toggleOnUserModal.emit(e);
   }
 }
