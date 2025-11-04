@@ -62,9 +62,7 @@ export class UserModal {
     { label: 'Sales Coordinator', value: 'Sales Coordinator', checked: false },
     { label: 'Pricing', value: 'Pricing', checked: false },
   ]
-  selectedUserTeams: string[] = this.userTeams
-    .filter(team => team.checked)
-    .map(team => team.value);
+  selectedUserTeams!: string[]
 
   onCancelCreate(event: Event) {
     event.preventDefault();
@@ -74,6 +72,10 @@ export class UserModal {
   onSubmit(event: Event) {
     event.preventDefault();
     if(this.mode === 'create') {
+      this.selectedUserTeams = this.userTeams
+        .filter(team => team.checked)
+        .map(team => team.value);
+
       this.apiService.createUser({
         userType: this.selectedUserType,
         userRole: this.selectedUserRole,
