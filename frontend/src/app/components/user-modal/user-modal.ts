@@ -94,7 +94,24 @@ export class UserModal {
       this.toggleOffUserModal.emit()
     }
     else if(this.mode === 'edit') {
-
+      this.apiService.editUser({
+        userType: this.selectedUserType,
+        userRole: this.selectedUserRole,
+        firstName: this.firstName, lastName: this.lastName,
+        phoneNumber: Number(this.phoneNumber), email: this.email,
+        password: this.password, confirmPassword: this.confirmPassword,
+        userCurrency: this.selectedUserCurrency,
+        numberFormat: this.selectedNumberFormat,
+        measurementSystem: this.selectedMeasurementSystem,
+        decimalPlaces: Number(this.selectedDecimalPlace),
+        userStatus: this.selectedUserStatus,
+        userTeam: this.selectedUserTeams,
+        createdAt: new Date(Date.now()),
+        updatedAt: new Date(Date.now())
+      }, this.selectedUserId).subscribe((res: any) => {
+        alert("User Updated Successfully")
+      })
+      this.toggleOffUserModal.emit()
     }
     else if(this.mode === 'view') {
 
@@ -133,12 +150,10 @@ export class UserModal {
 
   onPasswordInput(value: string) {
     this.password = value;
-    console.log("Password: ", value)
   }
 
   onConfirmPassword(value: string) {
     this.confirmPassword = value;
-    console.log("Confirm Password: ", value)
   }
 
   onUserCurrencyChange(value: string) {

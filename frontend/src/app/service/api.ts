@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 
 type User = {
 	userType: string
-	userRole: string 
-	firstName: string 
+	userRole: string
+	firstName: string
 	lastName: string
 	phoneNumber: number
 	email: string
@@ -34,5 +34,9 @@ export class Api {
 
   createUser(user: User) {
     return this.http.post(`${this.serverUrl}create`, user)
+  }
+
+  editUser(user: User, id: string) {
+    return this.http.put(`${this.serverUrl}users/${id}`, user)
   }
 }
