@@ -3,45 +3,43 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/sudarshan233/freightify-user-module/config"
 	"github.com/sudarshan233/freightify-user-module/controllers"
 )
 
-func main() {
-	fmt.Println("Hello World")
-
-	app := fiber.New()
-	port := os.Getenv("PORT")
-	if(port == "") {
-		port = "5000"
-	}
-
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:4200/", 
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-		AllowCredentials: true,
-	}))
-
+func init() {
+	config.LoadEnvVar()
 	err := config.ConnectDB()
 	if(err != nil) {
 		log.Fatal(err)
 	} 
+}
+
+func main() {
+	fmt.Println("Hello World")
+
+	app := gin.Default()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4200"}, 
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}))
 
 	fmt.Println("MongoDB Connected Successfully")
 
-	app.Get("/api/users", controllers.GetUsers)
+	app.GET("/api/users", controllers.GetUsers)
 
-	app.Post("/api/create", controllers.UserModal)
+	app.POST("/api/create", controllers.CreateUser)
 
-	app.Put("/api/users/:id", controllers.EditUser)
+	app.PUT("/api/users/:id", controllers.EditUser)
 
-	app.Delete("/api/users/:id", controllers.RemoveUser)
+	app.DELETE("/api/users/:id", controllers.RemoveUser)
 
-	log.Fatal(app.Listen("0.0.0.0:" + port))
+	app.Run()
 }
 

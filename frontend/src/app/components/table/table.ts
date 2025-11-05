@@ -56,7 +56,7 @@ export class Table {
 
   displayUsers() {
     const result = this.apiService.getUsers().subscribe((res: any) => {
-      res.map((user: Response) => {
+      res.users.map((user: Response) => {
         const {
           firstName, lastName,
           email, userRole,
