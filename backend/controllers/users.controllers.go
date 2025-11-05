@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/sudarshan233/freightify-user-module/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -12,31 +12,33 @@ import (
 
 type User struct {
 	ID                primitive.ObjectID    `json:"id,omitempty" bson:"_id,omitempty"`
-	UserType          string `json:"userType"`
-	UserRole          string `json:"userRole"`
-	FirstName         string `json:"firstName"`
-	LastName          string `json:"lastName"`
-	PhoneNumber       int64  `json:"phoneNumber"`
-	EmailID           string `json:"email"`
-	Password          string `json:"password"`
-	ConfirmPassword   string `json:"confirmPassword"`
-	UserCurrency      string `json:"userCurrency"`
-	NumberFormat      string `json:"numberFormat"`
-	MeasurementSystem string `json:"measurementSystem"`
-	DecimalPlaces     int    `json:"decimalPlaces"`
-	UserStatus        bool   `json:"userStatus"`
-	UserTeam          []string `json:"userTeam"`
-	CreatedAt         time.Time `bson:"createdAt" json:"createdAt"`
-	UpdatedAt         time.Time `bson:"updatedAt" json:"updatedAt"`
+	UserType          string 				`json:"userType"`
+	UserRole          string 				`json:"userRole"`
+	FirstName         string 				`json:"firstName"`
+	LastName          string 				`json:"lastName"`
+	PhoneNumber       int64  				`json:"phoneNumber"`
+	EmailID           string 				`json:"email"`
+	Password          string 				`json:"password"`
+	ConfirmPassword   string 				`json:"confirmPassword"`
+	UserCurrency      string 				`json:"userCurrency"`
+	NumberFormat      string 				`json:"numberFormat"`
+	MeasurementSystem string 				`json:"measurementSystem"`
+	DecimalPlaces     int    				`json:"decimalPlaces"`
+	UserStatus        bool   				`json:"userStatus"`
+	UserTeam          []string 				`json:"userTeam"`
+	CreatedAt         time.Time 			`bson:"createdAt" json:"createdAt"`
+	UpdatedAt         time.Time 			`bson:"updatedAt" json:"updatedAt"`
 }
 
-func GetUsers(c *fiber.Ctx) error {
-	var users []User
-	
+func GetUsers(c *gin.Context) {
+	var users []*User
 	cursor, err := config.Collection.Find(context.Background(), bson.M{})
 
 	if err != nil {
-		return err;
+		c.JSON(400, gin.H {
+			"success": false,
+			"message": "No users exist!!",
+		})
 	}
 
 	defer cursor.Close(context.Background())
@@ -45,71 +47,114 @@ func GetUsers(c *fiber.Ctx) error {
 		var user User
 
 		if err := cursor.Decode(&user); err != nil {
-			return err
+			c.JSON(500, gin.H {
+			"success": false,
+			"message": "Failure: Conversion from MongoDB structure to User struct",
+		})
 		}
-		users = append(users, user)
+		users = append(users, &user)
 	}
 
-	return c.Status(200).JSON(users)
+	c.JSON(200, gin.H {
+		"success": true,
+		"message": "Retreived info about all users successfully",
+		"users": users,
+	})
 }
 
-func UserModal(c *fiber.Ctx) error {
+func CreateUser(c *gin.Context) {
 	user := new(User)
 
-	if err := c.BodyParser(user); err != nil {
-		return err
-	}
+	c.Bind(&user)
 
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	insert, err := config.Collection.InsertOne(context.Background(), user)
 	
 	if err != nil {
-		return err
+		c.JSON(500, gin.H {
+			"success": false,
+			"message": "Error in creating a new user",
+		})
 	}
 
 	user.ID = insert.InsertedID.(primitive.ObjectID)
 
-	return c.Status(201).JSON(user)
+	c.JSON(201, gin.H {
+		"success": true,
+		"message": "Successfully created user",
+	})
 }
 
-func EditUser(c *fiber.Ctx) error {
-	user := new(User)
-	if err := c.BodyParser(user); err != nil {
-		return err
+func EditUser(c *gin.Context) {
+	var user User
+
+	if err := c.BindJSON(&user); err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "Invalid request body",
+		})
+		return
 	}
 
-	id := c.Params("id")
-	objectID, err := primitive.ObjectIDFromHex(id)	
+	id := c.Param("id")
+	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map {
-			"error": "Invalid User ID",
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "Invalid User ID",
 		})
+		return
 	}
 
 	user.UpdatedAt = time.Now()
 
-	filter := bson.M{"_id": objectID}
+	// Build only the fields you want to update
 	update := bson.M{
-		"$set": user,
-	}
-	
-	_, e := config.Collection.UpdateOne(context.Background(), filter, update)
-	if e != nil {
-		return err
+		"$set": bson.M{
+			"userType":          user.UserType,
+			"userRole":          user.UserRole,
+			"firstName":         user.FirstName,
+			"lastName":          user.LastName,
+			"phoneNumber":       user.PhoneNumber,
+			"email":             user.EmailID,
+			"password":          user.Password,
+			"confirmPassword":   user.ConfirmPassword,
+			"userCurrency":      user.UserCurrency,
+			"numberFormat":      user.NumberFormat,
+			"measurementSystem": user.MeasurementSystem,
+			"decimalPlaces":     user.DecimalPlaces,
+			"userStatus":        user.UserStatus,
+			"userTeam":          user.UserTeam,
+			"updatedAt":         user.UpdatedAt,
+		},
 	}
 
-	return c.Status(200).JSON(fiber.Map {
-		"updatedUserData": user,
+	filter := bson.M{"_id": objectID}
+
+	_, err = config.Collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Database update failed",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "User edited successfully",
 	})
 }
 
-func RemoveUser(c *fiber.Ctx) error {
-	id := c.Params("id")
+func RemoveUser(c *gin.Context) {
+	id := c.Param("id")
 	objectID, err := primitive.ObjectIDFromHex(id)	
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map {
-			"error": "Invalid User ID",
+		c.JSON(400, gin.H {
+			"success": false,
+			"message": "Invalid User ID",
 		})
 	}
 
@@ -117,10 +162,14 @@ func RemoveUser(c *fiber.Ctx) error {
 
 	_, e := config.Collection.DeleteOne(context.Background(), filter)
 	if e != nil {
-		return err
+		c.JSON(500, gin.H {
+			"success": false,
+			"message": "Invalid User ID",
+		})
 	}
 
-	return c.Status(200).JSON(fiber.Map {
-		"msg": "User data deleted successfully",
+	c.JSON(200, gin.H {
+		"success": true,
+		"message": "User data deleted successfully",
 	})
 }

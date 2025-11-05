@@ -16,12 +16,14 @@ export class Action {
   @Input() userId!: string;
 
   @Output() activateUserModal = new EventEmitter<{
-    mode: 'edit' | 'view'
+    mode: 'edit' | 'view',
+    userId?: string
   }>();
 
   editUserModal() {
     this.activateUserModal.emit({
       mode: 'edit',
+      userId: this.userId
     });
     console.log('Editing')
   }
