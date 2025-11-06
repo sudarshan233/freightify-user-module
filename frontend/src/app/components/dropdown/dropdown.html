@@ -4,6 +4,7 @@ bg-white w-full">
     <p class="text-xs font-light">{{info}}</p>
 
     <div class="flex justify-between relative w-full"
+         [class.opacity-50]="disabled"
     (click)="showDropDown()">
       @if (value) {
         <span class="border border-gray-300 rounded

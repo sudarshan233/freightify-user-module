@@ -14,6 +14,7 @@ export class Dropdown {
   @Input() label!: string
   @Input() options!: string[]
   @Input() info!: string
+  @Input() disabled!: boolean
 
   @Input() value: string = ''
   @Output() valueChange = new EventEmitter<string>();
@@ -22,10 +23,12 @@ export class Dropdown {
   selectedValue: string = '';
 
   showDropDown() {
+    if(this.disabled) return;
     this.selectDropDown = true
   }
 
   selectOption(option: string) {
+    if(this.disabled) return;
     this.selectedValue = option;
     this.selectDropDown = false;
 

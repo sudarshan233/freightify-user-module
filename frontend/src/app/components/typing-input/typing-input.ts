@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
+import {CommonModule, NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-typing-input',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, NgClass],
   templateUrl: './typing-input.html',
   styleUrl: './typing-input.css'
 })
@@ -11,6 +12,7 @@ export class TypingInput {
   @Input() label!: string;
   @Input() type!: string;
   @Input() input!: string;
+  @Input() disabled!: boolean;
   @Input() placeholder!: string;
 
   @Input() value: string = '';

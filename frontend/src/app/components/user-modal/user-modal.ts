@@ -42,6 +42,10 @@ export class UserModal implements OnChanges {
       console.log('Modal received user:', this.selectedUser);
       this.patchUserData()
     }
+    else if (changes['selectedUser']  && this.selectedUser && this.mode === 'view') {
+      console.log('Modal received user:', this.selectedUser);
+      this.patchUserData()
+    }
   }
 
   private patchUserData() {
@@ -204,9 +208,10 @@ export class UserModal implements OnChanges {
       );
       this.toggleOffUserModal.emit()
     }
-    else if(this.mode === 'view') {
+  }
 
-    }
+  isViewMode(): boolean {
+    return this.mode === 'view';
   }
 
   onUserTypeChange(value: string) {

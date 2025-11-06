@@ -2,7 +2,13 @@
 rounded drop-shadow-2xl w-1/3 h-3/4">
     <form (ngSubmit)="onSubmit($event)" class="flex flex-col gap-4 relative w-full h-full">
         <div class="flex justify-between items-center w-full">
+          @if (mode === 'create') {
             <h1 class="font-bold text-2xl">Create User</h1>
+          } @else if (mode === 'edit') {
+            <h1 class="font-bold text-2xl">Edit User</h1>
+          } @else {
+            <h1 class="font-bold text-2xl">User</h1>
+          }
             <button (click)="onCancelCreate($event)">
                 <lucide-icon [img]="X" class="size-8 mr-2 stroke-gray-400"
                 ></lucide-icon>
@@ -17,35 +23,37 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
         scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-white">
             <app-dropdown class="w-[45%]" label="User Type"
             [options]="userTypes"
-            [(value)]="selectedUserType"></app-dropdown>
+            [(value)]="selectedUserType"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="User Role"
             [options]="userRoles"
-            [(value)]="selectedUserRole"></app-dropdown>
+            [(value)]="selectedUserRole"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <app-typing-input class="w-[45%]" label="First Name"
             type="text" placeholder="First Name"
-            [(value)]="firstName"></app-typing-input>
+            [(value)]="firstName" [disabled]="isViewMode()"></app-typing-input>
 
             <app-typing-input class="w-[45%]" label="Last Name"
             type="text" placeholder="Last Name"
-            [(value)]="lastName"></app-typing-input>
+            [(value)]="lastName" [disabled]="isViewMode()"></app-typing-input>
 
             <app-typing-input class="w-[45%]" label="Phone Number"
             type="tel" placeholder="Phone Number"
-            [(value)]="phoneNumber"></app-typing-input>
+            [(value)]="phoneNumber" [disabled]="isViewMode()"></app-typing-input>
 
             <app-typing-input class="w-[45%]" label="Email ID"
             type="email" placeholder="Email"
-            [(value)]="email"></app-typing-input>
+            [(value)]="email" [disabled]="isViewMode()"></app-typing-input>
 
             <app-typing-input class="w-[45%]" label="Password"
             type="password" input="password" placeholder="Password"
-            [(value)]="password"></app-typing-input>
+            [(value)]="password" [disabled]="isViewMode()"></app-typing-input>
 
             <app-typing-input class="w-[45%]" label="Confirm Password"
             type="password" input="password" placeholder="Confirm Password"
-            [(value)]="password"></app-typing-input>
+            [(value)]="password" [disabled]="isViewMode()"></app-typing-input>
 
             <app-password-strength-bar class="w-full" [password]="password"></app-password-strength-bar>
 
@@ -53,21 +61,25 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
 
             <app-dropdown class="w-[45%] mt-4" label="User Currency"
             [options]="userCurrencies"
-            [(value)]="selectedUserCurrency"></app-dropdown>
+            [(value)]="selectedUserCurrency"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Number Format"
             [options]="numberFormats" info="Select your number display format"
-            [(value)]="selectedNumberFormat"></app-dropdown>
+            [(value)]="selectedNumberFormat"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Measurement System"
             [options]="measurementSystems"
             info="Select your measurement unit display format"
-            [(value)]="selectedMeasurementSystem"></app-dropdown>
+            [(value)]="selectedMeasurementSystem"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Decimal Places"
             [options]="decimalPlaces"
             info="Select your measurement unit display format"
-            [(value)]="selectedDecimalPlace"></app-dropdown>
+            [(value)]="selectedDecimalPlace"
+            [disabled]="isViewMode()"></app-dropdown>
 
             <div class="w-3/4 flex flex-col gap-2 flex-wrap">
                 <label class="text-sm">User Status</label>
@@ -77,14 +89,17 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
                     border px-0.5 relative"
                     [ngClass]="{
                         'border-blue-400': userStatus,
-                        'border-gray-400': !userStatus
+                        'border-gray-400': !userStatus || mode === 'view',
+
                     }">
-                        <button class="size-6" (click)="toggleUserStatus($event)">
+                        <button class="size-6" (click)="toggleUserStatus($event)"
+                        [disabled]="isViewMode()">
                                 <div id="user-stat-btn" class="size-4 rounded-full
                                 absolute top-0.5 transition-all ease-linear duration-500"
                                 [ngClass]="{
                                     'bg-blue-400 right-1': userStatus,
-                                    'bg-gray-400 left-1': !userStatus
+                                    'bg-gray-400 left-1': !userStatus,
+                                    'bg-gray-400': mode === 'view'
                                 }">
 
                                 </div>
@@ -99,7 +114,7 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
                     <label *ngFor="let team of userTeams"
                     class="text-sm font-light mr-4 flex items-center gap-1">
                         <input type="checkbox" [(ngModel)]="team.checked"
-                        name="userTeam" />
+                        name="userTeam" [disabled]="isViewMode()" />
                         {{ team.label }}
                     </label>
                 </div>
@@ -112,17 +127,14 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
                 px-4 py-2 border border-gray-400 rounded
                 hover:bg-red-950"
                 (click)="onCancelCreate($event)">Cancel</button>
-                @if(mode === 'create') {
-                    <button class="font-medium text-sm
-                    px-4 py-2 rounded
-                  hover:bg-lime-500 bg-lime-400 transition-colors duration-400"
-                            type="submit">Create</button>
-                } @else if (mode === 'edit') {
-                  <button class="font-medium text-sm
-                    px-4 py-2 rounded
-                  hover:bg-lime-500 bg-lime-400 transition-colors duration-400"
-                          type="submit">Edit</button>
+                @if(!isViewMode) {
+                  @if(mode === 'create') {
+                    <button type="submit">Create</button>
+                  } @else if (mode === 'edit') {
+                    <button type="submit">Edit</button>
+                  }
                 }
+
         </div>
     </form>
 </section>
