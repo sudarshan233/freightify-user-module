@@ -3,6 +3,7 @@ import { Api } from '../../service/api';
 
 import {LucideAngularModule, UserRoundPen, Eye, Trash2} from 'lucide-angular';
 import {Response, User} from '../../models/user.types';
+import {users} from '../../models/user.data';
 
 @Component({
   selector: 'app-table',
@@ -22,7 +23,6 @@ export class Table {
     user: Response
   }>();
 
-  users: Response[] = []
   result:any = null;
 
   apiService = inject(Api);
@@ -33,14 +33,17 @@ export class Table {
 
   displayUsers() {
     const result = this.apiService.getUsers().subscribe((res: any) => {
-      this.users = res.users.map((user: any) => {
-        return {
-          ...user,
-          createdAt: new Date(user.createdAt),
-        }
-
+      res.users.map((user: any) => {
+        users.update(users => [
+          ...users,
+          {
+            ...user,
+            createdAt: new Date(user.createdAt),
+          }
+        ]);
       });
     })
+
   }
   editUserModal(user: Response): void {
     this.toggleOnUserModal.emit({
@@ -60,4 +63,5 @@ export class Table {
   }
 
 
+  protected readonly users = users;
 }

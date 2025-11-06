@@ -7,7 +7,7 @@
                 <td class="py-4 px-14 font-bold">Status</td>
                 <td class="py-4 px-14 font-bold">Actions</td>
         </tr>
-        @for(user of users; track $index) {
+        @for(user of users(); track $index) {
         <tr class="border-x-0 border-t-0 border-b border-gray-300">
                 <td class="py-4 px-14 font-extralight">{{user.firstName + ' ' + user.lastName}}</td>
                 <td class="py-4 px-14 font-extralight">{{user.email}}</td>
