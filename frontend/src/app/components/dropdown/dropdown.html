@@ -5,10 +5,10 @@ bg-white w-full">
 
     <div class="flex justify-between relative w-full"
     (click)="showDropDown()">
-      @if (selectedValue) {
+      @if (value) {
         <span class="border border-gray-300 rounded
         p-2 cursor-pointer w-full outline-0 font-light text-sm"
-        >{{selectedValue}}</span>
+        >{{value}}</span>
       } @else {
         <span class="border border-gray-300 rounded
         p-2 cursor-pointer w-full outline-0 font-light text-sm opacity-50"

@@ -15,6 +15,7 @@ export class Dropdown {
   @Input() options!: string[]
   @Input() info!: string
 
+  @Input() value: string = ''
   @Output() valueChange = new EventEmitter<string>();
 
   selectDropDown: boolean = false
@@ -28,6 +29,7 @@ export class Dropdown {
     this.selectedValue = option;
     this.selectDropDown = false;
 
+    this.value = option;
     this.valueChange.emit(option)
   }
 }

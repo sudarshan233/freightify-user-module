@@ -6,11 +6,11 @@ tmp_dir = "tmp"
 
 [build]
   # Command to build your Gin app
-  cmd = "go build -o ./tmp/main ."
+  cmd = "go build -o tmp/main ."
   # Binary to run
-  bin = "./tmp/main"
+  bin = "tmp/main"
   # Include only .go, .mod, and .env files
-  include_ext = ["go", "tpl", "tmpl", "html"]
+  include_ext = ["go", "tpl", "tmpl", "html", "env"]
   # Ignore vendor directory
   exclude_dir = ["tmp", "vendor"]
   # Delay after file changes

@@ -1,51 +1,28 @@
 import {Component, EventEmitter, inject, Input, numberAttribute, Output} from '@angular/core';
 import { Api } from '../../service/api';
-import { Action } from '../action/action';
 
-type User = {
-  id?: string
-  name: string
-  email: string
-  role: string
-  createdAt: string
-  status: "Active" | "Inactive"
-}
-
-type Response = {
-  _id: string
-  usertype: string
-  userRole: string
-  firstName: string
-  lastName: string
-  phoneNumber: number
-  email: string
-  password: string
-  confirmPassword: string
-  userCurrency: string
-  numberFormat: string
-  measurementSystem: string
-  decimalPlaces: number
-  userStatus: boolean
-  userTeam: string
-  createdAt: Date
-  updatedAt: Date
-
-}
+import {LucideAngularModule, UserRoundPen, Eye, Trash2} from 'lucide-angular';
+import {Response, User} from '../../models/user.types';
 
 @Component({
   selector: 'app-table',
-  imports: [Action],
+  imports: [LucideAngularModule],
   templateUrl: './table.html',
   styleUrl: './table.css'
 })
 
 export class Table {
+
+  readonly UserRoundPen = UserRoundPen;
+  readonly Eye = Eye;
+  readonly Trash = Trash2;
+
   @Output() toggleOnUserModal = new EventEmitter<{
     mode: 'edit' | 'view',
-    userId?: string
-    }>();
+    user: Response
+  }>();
 
-  users: User[] = []
+  users: Response[] = []
   result:any = null;
 
   apiService = inject(Api);
@@ -56,34 +33,31 @@ export class Table {
 
   displayUsers() {
     const result = this.apiService.getUsers().subscribe((res: any) => {
-      res.users.map((user: Response) => {
-        const {
-          firstName, lastName,
-          email, userRole,
-          createdAt, userStatus
-        } = user;
+      this.users = res.users.map((user: any) => {
+        return {
+          ...user,
+          createdAt: new Date(user.createdAt),
+        }
 
-
-        const name: string = firstName + " " + lastName;
-        const status: "Active" | "Inactive" = userStatus ? "Active" : "Inactive"
-        const createdDate: Date = new Date(createdAt)
-        const formattedDate: string = createdDate.toISOString().split('T')[0]
-        this.users.push({
-          id: user._id,
-          name,
-          email,
-          role: userRole,
-          createdAt: formattedDate,
-          status
-        })
-      })
+      });
     })
   }
-
-  onClickUserModal(e: {
-    mode: 'edit' | 'view',
-    userId?: string
-  }) {
-    this.toggleOnUserModal.emit(e);
+  editUserModal(user: Response): void {
+    this.toggleOnUserModal.emit({
+      mode: 'edit',
+      user: user,
+    });
+    console.log("From table: ", user)
+    console.log('Editing')
   }
+
+  viewUserModal(user: Response) {
+    this.toggleOnUserModal.emit({
+      mode: 'view',
+      user: user
+    });
+    console.log('Viewing user')
+  }
+
+
 }

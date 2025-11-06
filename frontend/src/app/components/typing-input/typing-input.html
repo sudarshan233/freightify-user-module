@@ -5,6 +5,7 @@
             <input class="text-sm p-2 w-full
             border border-1 border-gray-300 rounded outline-0"
             [type]="type" [placeholder]="placeholder"
+                   [value]="value"
             (input)="onInputChange($event)"/>
             @if (!showPassword) {
                 <lucide-icon [img]="EyeOff" class="opacity-50
@@ -15,9 +16,9 @@
             }
         </div>
     } @else {
-        <input class="text-sm p-2 
+        <input class="text-sm p-2
         border border-1 border-gray-300 rounded
-        outline-0" [type]="type" [placeholder]="placeholder"
+        outline-0" [type]="type" [placeholder]="placeholder" [value]="value"
         (input)="onInputChange($event)"/>
     }
 </div>

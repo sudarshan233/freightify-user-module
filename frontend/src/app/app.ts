@@ -4,6 +4,7 @@ import { InputButtons } from './components/input-buttons/input-buttons';
 import { Table } from './components/table/table';
 import { UserModal } from './components/user-modal/user-modal';
 import { CommonModule } from '@angular/common';
+import {Response} from './models/user.types';
 
 @Component({
   selector: 'app-root',
@@ -14,14 +15,36 @@ import { CommonModule } from '@angular/common';
 export class App {
   protected readonly title = signal('frontend');
 
+  defaultUser: Response = {
+    id: '',
+    userType: '',
+    userRole: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: 0,
+    email: '',
+    password: '',
+    confirmPassword: '',
+    userCurrency: '',
+    numberFormat: '',
+    measurementSystem: '',
+    decimalPlaces: 0,
+    userStatus: true,
+    userTeam: [],
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
+
   showUserModal: boolean = false;
-  selectedUserId: string = '';
   modalMode: 'view' | 'edit' | 'create' = 'create';
+  selectedUser!: Response;
 
-
-  toggleOnUserModal({ mode, userId}:{ mode: 'view' | 'edit' | 'create';
-    userId?: string }) {
+  toggleOnUserModal({ mode, user}:{ mode: 'view' | 'edit' | 'create',
+    user: Response }) {
     this.modalMode = mode;
+    this.selectedUser = user;
+    console.log("From App: ", this.selectedUser);
     this.showUserModal = true;
   }
   toggleOffUserModal() {

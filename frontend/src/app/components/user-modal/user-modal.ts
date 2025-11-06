@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { Dropdown } from '../dropdown/dropdown';
 import { TypingInput } from '../typing-input/typing-input';
 import { PasswordCriteria } from '../password-criteria/password-criteria';
@@ -7,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { Api } from '../../service/api';
-
+import {Response} from '../../models/user.types';
 
 @Component({
   selector: 'app-user-modal',
@@ -17,14 +26,55 @@ import { Api } from '../../service/api';
   templateUrl: './user-modal.html',
   styleUrl: './user-modal.css'
 })
-export class UserModal {
+export class UserModal implements OnChanges {
   readonly X = X;
 
   apiService = inject(Api);
+  private cdr = inject(ChangeDetectorRef);
 
   @Input() mode!: 'create' | 'edit' | 'view'
-  @Input() selectedUserId!: string;
+  @Input() selectedUser!: Response;
   @Output() toggleOffUserModal = new EventEmitter<boolean>();
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedUser']  && this.selectedUser && this.mode === 'edit') {
+      console.log('Modal received user:', this.selectedUser);
+      this.patchUserData()
+    }
+  }
+
+  private patchUserData() {
+    this.selectedUserId = this.selectedUser.id;
+    this.selectedUserType = this.selectedUser.userType;
+    this.selectedUserRole = this.selectedUser.userRole;
+    this.firstName = this.selectedUser.firstName;
+    this.lastName = this.selectedUser.lastName;
+    this.phoneNumber = this.selectedUser.phoneNumber.toString();
+    this.email = this.selectedUser.email;
+    this.password = ''
+    this.confirmPassword = ''
+    this.selectedUserCurrency = this.selectedUser.userCurrency;
+    this.selectedNumberFormat = this.selectedUser.numberFormat;
+    this.selectedMeasurementSystem = this.selectedUser.measurementSystem;
+    this.selectedDecimalPlace = this.selectedUser.decimalPlaces.toString();
+    this.selectedUserStatus = this.selectedUser.userStatus;
+
+    this.userTeams.forEach(team => (team.checked = false));
+
+    if (this.selectedUser.userTeam && Array.isArray(this.selectedUser.userTeam)) {
+      this.selectedUser.userTeam.forEach(userTeamValue => {
+        const match = this.userTeams.find(t => t.value === userTeamValue);
+        if (match) match.checked = true;
+      });
+    }
+
+    console.log('Incoming Teams:', this.selectedUser.userTeam);
+    console.log('Updated Teams:', this.userTeams);
+    this.cdr.detectChanges();
+
+  }
+
+  selectedUserId!: string;
 
   userTypes: string[] = ["Internal User", "Customer"]
   selectedUserType: string = '';
@@ -96,6 +146,7 @@ export class UserModal {
       this.toggleOffUserModal.emit()
     }
     else if(this.mode === 'edit') {
+      console.log('User Id: ', this.selectedUserId);
       this.apiService.editUser({
         userType: this.selectedUserType,
         userRole: this.selectedUserRole,
@@ -108,9 +159,8 @@ export class UserModal {
         decimalPlaces: Number(this.selectedDecimalPlace),
         userStatus: this.selectedUserStatus,
         userTeam: this.selectedUserTeams,
-        createdAt: new Date(Date.now()),
         updatedAt: new Date(Date.now())
-      }, this.selectedUserId).subscribe((res: any) => {
+      }, this.selectedUser.id).subscribe((res: any) => {
         alert("User Updated Successfully")
       })
       this.toggleOffUserModal.emit()

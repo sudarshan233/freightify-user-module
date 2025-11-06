@@ -13,6 +13,7 @@ export class TypingInput {
   @Input() input!: string;
   @Input() placeholder!: string;
 
+  @Input() value: string = '';
   @Output() valueChange = new EventEmitter<string>();
 
   readonly EyeOff = EyeOff;
@@ -27,7 +28,8 @@ export class TypingInput {
 
   onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.valueChange.emit(input.value)
+    this.value = input.value;
+    this.valueChange.emit(this.value);
   }
-  
+
 }

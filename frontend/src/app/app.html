@@ -1,6 +1,6 @@
-<app-user-modal *ngIf="showUserModal"
+<app-user-modal *ngIf="showUserModal && selectedUser"
                 [mode]="modalMode"
-                [selectedUserId]="selectedUserId"
+                [selectedUser]="selectedUser"
                 class="w-1/3"
 (toggleOffUserModal)="toggleOffUserModal()"></app-user-modal>
 <div class="px-24 py-10 transition-all duration-300" [ngClass]="{

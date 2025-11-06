@@ -16,7 +16,7 @@ type User = {
 	decimalPlaces: number
 	userStatus: boolean
 	userTeam: string[]
-	createdAt: Date
+	createdAt?: Date
 	updatedAt: Date
 }
 

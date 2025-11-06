@@ -9,21 +9,41 @@
         </tr>
         @for(user of users; track $index) {
         <tr class="border-x-0 border-t-0 border-b border-gray-300">
-                <td class="py-4 px-14 font-extralight">{{user.name}}</td>
+                <td class="py-4 px-14 font-extralight">{{user.firstName + ' ' + user.lastName}}</td>
                 <td class="py-4 px-14 font-extralight">{{user.email}}</td>
-                <td class="py-4 px-14 font-extralight">{{user.role}}</td>
-                <td class="py-4 px-14 font-extralight">{{user.createdAt}}</td>
-                @if (user.status === "Active") {
+                <td class="py-4 px-14 font-extralight">{{user.userRole}}</td>
+                <td class="py-4 px-14 font-extralight">{{
+                  user.createdAt.toISOString().split('T')[0]
+                  }}</td>
+                @if (user.userStatus) {
                         <td class="py-4 px-14
-                        font-light text-green-500">{{user.status}}</td>
+                        font-light text-green-500">Active</td>
                 } @else {
                         <td class="py-4 px-14
-                        font-light text-red-500">{{user.status}}</td>
+                        font-light text-red-500">Inactive</td>
                 }
-                <td class="py-4 px-14 font-extralight">
-                        <app-action [userId]="user.id || ''"
-                          (activateUserModal)="onClickUserModal($event)"
-                                    class="flex gap-2"></app-action>
+                <td class="py-4 px-14 font-extralight flex gap-2">
+                  <div class="hover:bg-gray-200 bg-white transition-colors
+                  duration-500 rounded-full p-1 size-6 cursor-pointer"
+                       (click)="editUserModal(user)">
+                    <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
+
+                    </lucide-icon>
+                  </div>
+                  <div class="hover:bg-gray-200 bg-white transition-colors
+                  duration-500 rounded-full p-1 size-6 cursor-pointer"
+                       (click)="viewUserModal(user)">
+                    <lucide-icon [img]="Eye" class="size-4 stroke-black">
+
+                    </lucide-icon>
+                  </div>
+                  <div class="hover:bg-gray-200 bg-white transition-colors
+                  duration-500 rounded-full p-1 size-6 cursor-pointer"
+                  >
+                    <lucide-icon [img]="Trash" class="size-4 stroke-black">
+
+                    </lucide-icon>
+                  </div>
                 </td>
 
         </tr>
