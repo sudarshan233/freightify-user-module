@@ -147,27 +147,27 @@ export class UserModal implements OnChanges {
         updatedAt: new Date(Date.now())
       }).subscribe((res: any) => {
         alert("User Created Successfully")
+        users.update(users => [
+          ...users,
+          {
+            id: "",
+            userType: this.selectedUserType,
+            userRole: this.selectedUserRole,
+            firstName: this.firstName, lastName: this.lastName,
+            phoneNumber: Number(this.phoneNumber), email: this.email,
+            password: this.password, confirmPassword: this.confirmPassword,
+            userCurrency: this.selectedUserCurrency,
+            numberFormat: this.selectedNumberFormat,
+            measurementSystem: this.selectedMeasurementSystem,
+            decimalPlaces: Number(this.selectedDecimalPlace),
+            userStatus: this.selectedUserStatus,
+            userTeam: this.selectedUserTeams,
+            createdAt: new Date(Date.now()),
+            updatedAt: new Date(Date.now())
+          },
+        ]);
       })
 
-      users.update(users => [
-        ...users,
-        {
-          id: "",
-          userType: this.selectedUserType,
-          userRole: this.selectedUserRole,
-          firstName: this.firstName, lastName: this.lastName,
-          phoneNumber: Number(this.phoneNumber), email: this.email,
-          password: this.password, confirmPassword: this.confirmPassword,
-          userCurrency: this.selectedUserCurrency,
-          numberFormat: this.selectedNumberFormat,
-          measurementSystem: this.selectedMeasurementSystem,
-          decimalPlaces: Number(this.selectedDecimalPlace),
-          userStatus: this.selectedUserStatus,
-          userTeam: this.selectedUserTeams,
-          createdAt: new Date(Date.now()),
-          updatedAt: new Date(Date.now())
-        },
-      ]);
       this.toggleOffUserModal.emit()
     }
     else if(this.mode === 'edit') {
@@ -187,25 +187,26 @@ export class UserModal implements OnChanges {
         updatedAt: new Date(Date.now())
       }, this.selectedUser.id).subscribe((res: any) => {
         alert("User Updated Successfully")
+
+        users.update(users =>
+          users.map((u: Response) => u.id === this.selectedUserId ? {
+            ...u,
+            userType: this.selectedUserType,
+            userRole: this.selectedUserRole,
+            firstName: this.firstName, lastName: this.lastName,
+            phoneNumber: Number(this.phoneNumber), email: this.email,
+            password: this.password, confirmPassword: this.confirmPassword,
+            userCurrency: this.selectedUserCurrency,
+            numberFormat: this.selectedNumberFormat,
+            measurementSystem: this.selectedMeasurementSystem,
+            decimalPlaces: Number(this.selectedDecimalPlace),
+            userStatus: this.selectedUserStatus,
+            userTeam: this.selectedUserTeams,
+            updatedAt: new Date(Date.now())
+          } : u)
+        );
       })
 
-      users.update(users =>
-        users.map((u: Response) => u.id === this.selectedUserId ? {
-          ...u,
-          userType: this.selectedUserType,
-          userRole: this.selectedUserRole,
-          firstName: this.firstName, lastName: this.lastName,
-          phoneNumber: Number(this.phoneNumber), email: this.email,
-          password: this.password, confirmPassword: this.confirmPassword,
-          userCurrency: this.selectedUserCurrency,
-          numberFormat: this.selectedNumberFormat,
-          measurementSystem: this.selectedMeasurementSystem,
-          decimalPlaces: Number(this.selectedDecimalPlace),
-          userStatus: this.selectedUserStatus,
-          userTeam: this.selectedUserTeams,
-          updatedAt: new Date(Date.now())
-        } : u)
-      );
       this.toggleOffUserModal.emit()
     }
   }
