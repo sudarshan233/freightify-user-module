@@ -18,6 +18,7 @@ import { LucideAngularModule, X } from 'lucide-angular';
 import { Api } from '../../service/api';
 import {Response} from '../../models/user.types';
 import {errorHandler, users} from '../../models/user.data';
+import { UserService } from '../../service/user-service';
 
 @Component({
   selector: 'app-user-modal',
@@ -31,6 +32,7 @@ export class UserModal implements OnChanges {
   readonly X = X;
 
   apiService = inject(Api);
+  userService = inject(UserService)
   private cdr = inject(ChangeDetectorRef);
 
   @Input() mode!: 'create' | 'edit' | 'view'
@@ -256,25 +258,7 @@ export class UserModal implements OnChanges {
       }).subscribe((res: any) => {
         alert("User Created Successfully")
         
-        users.update(users => [
-          ...users,
-          {
-            id: "",
-            userType: this.selectedUserType,
-            userRole: this.selectedUserRole,
-            firstName: this.firstName, lastName: this.lastName,
-            phoneNumber: Number(this.phoneNumber), email: this.email,
-            password: this.password, confirmPassword: this.confirmPassword,
-            userCurrency: this.selectedUserCurrency,
-            numberFormat: this.selectedNumberFormat,
-            measurementSystem: this.selectedMeasurementSystem,
-            decimalPlaces: Number(this.selectedDecimalPlace),
-            userStatus: this.selectedUserStatus,
-            userTeam: this.selectedUserTeams,
-            createdAt: new Date(Date.now()),
-            updatedAt: new Date(Date.now())
-          },
-        ]);
+        this.userService.getUsers()
       })
 
       this.toggleOffUserModal.emit()
@@ -297,23 +281,8 @@ export class UserModal implements OnChanges {
       }, this.selectedUser.id).subscribe((res: any) => {
         alert("User Updated Successfully")
 
-        users.update(users =>
-          users.map((u: Response) => u.id === this.selectedUserId ? {
-            ...u,
-            userType: this.selectedUserType,
-            userRole: this.selectedUserRole,
-            firstName: this.firstName, lastName: this.lastName,
-            phoneNumber: Number(this.phoneNumber), email: this.email,
-            password: this.password, confirmPassword: this.confirmPassword,
-            userCurrency: this.selectedUserCurrency,
-            numberFormat: this.selectedNumberFormat,
-            measurementSystem: this.selectedMeasurementSystem,
-            decimalPlaces: Number(this.selectedDecimalPlace),
-            userStatus: this.selectedUserStatus,
-            userTeam: this.selectedUserTeams,
-            updatedAt: new Date(Date.now())
-          } : u)
-        );
+        this.userService.getUsers()
+        
       })
 
       this.toggleOffUserModal.emit()

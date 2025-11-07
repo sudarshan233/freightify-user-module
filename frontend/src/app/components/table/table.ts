@@ -4,6 +4,7 @@ import { Api } from '../../service/api';
 import {LucideAngularModule, UserRoundPen, Eye, Trash2} from 'lucide-angular';
 import {Response, User} from '../../models/user.types';
 import {users} from '../../models/user.data';
+import { UserService } from '../../service/user-service';
 
 @Component({
   selector: 'app-table',
@@ -30,25 +31,13 @@ export class Table {
   result:any = null;
 
   apiService = inject(Api);
+  userService = inject(UserService)
 
   ngOnInit(): void {
-    this.displayUsers()
+    this.userService.getUsers()
   }
 
-  displayUsers() {
-    const result = this.apiService.getUsers().subscribe((res: any) => {
-      res.users.map((user: any) => {
-        users.update(users => [
-          ...users,
-          {
-            ...user,
-            createdAt: new Date(user.createdAt),
-          }
-        ]);
-      });
-    })
-
-  }
+  
   editUserModal(user: Response): void {
     this.toggleOnUserModal.emit({
       mode: 'edit',
@@ -71,7 +60,7 @@ export class Table {
     console.log(user)
     this.apiService.deleteUser(user.id).subscribe((res: any) => {
       alert("User has been deleted successfully!");
-      users.update(users => users.filter(u => u.id !== user.id));
+      this.userService.getUsers()
     });
   }
   protected readonly users = users;
