@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { Api } from '../../service/api';
 import {Response} from '../../models/user.types';
-import {users} from '../../models/user.data';
+import {errorHandler, users} from '../../models/user.data';
 
 @Component({
   selector: 'app-user-modal',
@@ -91,8 +91,10 @@ export class UserModal implements OnChanges {
   lastName: string = '';
   phoneNumber: string = '';
   email: string = '';
+
   confirmPassword: string = '';
   password: string = '';
+  passwordCheck: boolean = true;
 
   userCurrencies: string[] = ["€ EUR (Euros)", "$ USD (US Dollars)"];
   selectedUserCurrency: string = ''
@@ -130,6 +132,112 @@ export class UserModal implements OnChanges {
       this.selectedUserTeams = this.userTeams
         .filter(team => team.checked)
         .map(team => team.value);
+      
+      const errorLoc = []
+      
+      if(!this.selectedUserType) {
+        errorLoc.push("User Type")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.selectedUserRole) {
+        errorLoc.push("User Role")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.selectedUserCurrency) {
+        errorLoc.push("User Currency")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.selectedMeasurementSystem) {
+        errorLoc.push("Measurement System")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.selectedDecimalPlace) {
+        errorLoc.push("Decimal Places")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.selectedNumberFormat) {
+        errorLoc.push("Number Format")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.firstName) {
+        errorLoc.push("First Name")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.lastName) {
+        errorLoc.push("Last Name")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.phoneNumber) {
+        errorLoc.push("Phone Number")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.email) {
+        errorLoc.push("Email ID")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.password) {
+        errorLoc.push("Password")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(!this.confirmPassword) {
+        errorLoc.push("Confirm Password")
+        errorHandler.set({
+          errorStatus: true,
+          errorLocation: errorLoc
+        })
+      }
+
+      if(this.password !== this.confirmPassword) {
+          this.passwordCheck = false;
+          return;
+      }
+      console.log(errorLoc)
+
+      if(errorLoc.length > 0) return;
 
       this.apiService.createUser({
         userType: this.selectedUserType,
@@ -147,6 +255,7 @@ export class UserModal implements OnChanges {
         updatedAt: new Date(Date.now())
       }).subscribe((res: any) => {
         alert("User Created Successfully")
+        
         users.update(users => [
           ...users,
           {

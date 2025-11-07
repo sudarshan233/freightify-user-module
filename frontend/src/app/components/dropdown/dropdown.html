@@ -18,6 +18,9 @@ bg-white w-full">
         <lucide-icon class="absolute
         top-1/4 right-1" [img]="ChevronDown"></lucide-icon>
     </div>
+    @if(hasError()) {
+      <p class="text-sm text-red-500">Select {{label}}</p>
+    }
     @if (selectDropDown) {
         <div class="bg-white
         absolute z-50 top-1/3 w-full drop-shadow-lg">

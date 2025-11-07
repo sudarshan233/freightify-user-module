@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { LucideAngularModule, ChevronDown } from 'lucide-angular';
-
+import { errorHandler } from '../../models/user.data';
 
 @Component({
   selector: 'app-dropdown',
@@ -22,6 +22,11 @@ export class Dropdown {
   selectDropDown: boolean = false
   selectedValue: string = '';
 
+  hasError(): boolean {
+    const e = errorHandler();
+    return e.errorStatus && e.errorLocation.includes(this.label);
+  }
+
   showDropDown() {
     if(this.disabled) return;
     this.selectDropDown = true
@@ -33,6 +38,13 @@ export class Dropdown {
     this.selectDropDown = false;
 
     this.value = option;
+    if(this.value) {
+      errorHandler.update(e => ({
+        errorStatus: false,
+        errorLocation: e.errorLocation.filter(location => this.label !== location)
+      }))
+    }
+    
     this.valueChange.emit(option)
   }
 }

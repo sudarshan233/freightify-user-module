@@ -26,3 +26,8 @@ export type Response = {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface CustomErrorHandler {
+  errorStatus: boolean,
+  errorLocation: string[]
+}

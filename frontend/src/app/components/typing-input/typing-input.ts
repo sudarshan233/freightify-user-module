@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
 import {CommonModule, NgClass} from '@angular/common';
+import { errorHandler } from '../../models/user.data';
 
 @Component({
   selector: 'app-typing-input',
@@ -23,6 +24,11 @@ export class TypingInput {
 
   showPassword: boolean = false;
 
+  hasError(): boolean {
+    const e = errorHandler()
+    return e.errorStatus && e.errorLocation.includes(this.label);
+  }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
     this.type = this.type === "password" ? "text" : "password"
@@ -31,6 +37,14 @@ export class TypingInput {
   onInputChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = input.value;
+
+     if(this.value) {
+      errorHandler.update(e => ({
+        errorStatus: false,
+        errorLocation: e.errorLocation.filter(location => this.label !== location)
+      }))
+    }
+    
     this.valueChange.emit(this.value);
   }
 

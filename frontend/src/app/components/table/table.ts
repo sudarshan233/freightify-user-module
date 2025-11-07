@@ -63,10 +63,12 @@ export class Table {
       mode: 'view',
       user: user
     });
+    console.log("From table: ", user)
     console.log('Viewing user')
   }
 
   deleteUser(user: Response) {
+    console.log(user)
     this.apiService.deleteUser(user.id).subscribe((res: any) => {
       alert("User has been deleted successfully!");
       users.update(users => users.filter(u => u.id !== user.id));

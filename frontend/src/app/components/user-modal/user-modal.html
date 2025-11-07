@@ -24,12 +24,14 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
             <app-dropdown class="w-[45%]" label="User Type"
             [options]="userTypes"
             [(value)]="selectedUserType"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="User Role"
             [options]="userRoles"
             [(value)]="selectedUserRole"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <app-typing-input class="w-[45%]" label="First Name"
             type="text" placeholder="First Name"
@@ -53,7 +55,10 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
 
             <app-typing-input class="w-[45%]" label="Confirm Password"
             type="password" input="password" placeholder="Confirm Password"
-            [(value)]="password" [disabled]="isViewMode()"></app-typing-input>
+            [(value)]="confirmPassword" [disabled]="isViewMode()"></app-typing-input>
+
+            <p *ngIf="!passwordCheck"
+            class="text-sm text-red-500">Passwords do not match!!</p>
 
             <app-password-strength-bar class="w-full" [password]="password"></app-password-strength-bar>
 
@@ -62,24 +67,28 @@ rounded drop-shadow-2xl w-1/3 h-3/4">
             <app-dropdown class="w-[45%] mt-4" label="User Currency"
             [options]="userCurrencies"
             [(value)]="selectedUserCurrency"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Number Format"
             [options]="numberFormats" info="Select your number display format"
             [(value)]="selectedNumberFormat"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Measurement System"
             [options]="measurementSystems"
             info="Select your measurement unit display format"
             [(value)]="selectedMeasurementSystem"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <app-dropdown class="w-[45%]" label="Decimal Places"
             [options]="decimalPlaces"
             info="Select your measurement unit display format"
             [(value)]="selectedDecimalPlace"
-            [disabled]="isViewMode()"></app-dropdown>
+            [disabled]="isViewMode()"
+            ></app-dropdown>
 
             <div class="w-3/4 flex flex-col gap-2 flex-wrap">
                 <label class="text-sm">User Status</label>

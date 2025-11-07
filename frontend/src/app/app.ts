@@ -16,8 +16,7 @@ import {Api} from './service/api';
 export class App {
   protected readonly title = signal('frontend');
 
-  defaultUser: Response = {
-    id: '',
+  defaultUser = {
     userType: '',
     userRole: '',
     firstName: '',
