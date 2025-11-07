@@ -23,6 +23,10 @@ export class Table {
     user: Response
   }>();
 
+  @Output() sendUser = new EventEmitter<{
+    user: Response
+  }>();
+
   result:any = null;
 
   apiService = inject(Api);
@@ -62,6 +66,11 @@ export class Table {
     console.log('Viewing user')
   }
 
-
+  deleteUser(user: Response) {
+    this.apiService.deleteUser(user.id).subscribe((res: any) => {
+      alert("User has been deleted successfully!");
+      users.update(users => users.filter(u => u.id !== user.id));
+    });
+  }
   protected readonly users = users;
 }
