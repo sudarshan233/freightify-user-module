@@ -66,10 +66,11 @@ export class Table {
     console.log('Viewing user')
   }
 
-  enableDelete(user: Response) {
-    this.sendUser.emit({
-      user: user,
-    })
+  deleteUser(user: Response) {
+    this.apiService.deleteUser(user.id).subscribe((res: any) => {
+      alert("User has been deleted successfully!");
+      users.update(users => users.filter(u => u.id !== user.id));
+    });
   }
   protected readonly users = users;
 }

@@ -39,4 +39,8 @@ export class Api {
   editUser(user: User, id: string) {
     return this.http.put(`${this.serverUrl}users/${id}`, user)
   }
+
+  deleteUser(id: string) {
+    return this.http.delete(`${this.serverUrl}users/${id}`)
+  }
 }
