@@ -40,6 +40,9 @@ func main() {
 
 	app.DELETE("/api/users/:id", controllers.RemoveUser)
 
+	app.GET("/api/users/filter", controllers.FilterUsers)
+
+
 	app.Run()
 }
 

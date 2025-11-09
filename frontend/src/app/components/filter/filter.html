@@ -1,0 +1,59 @@
+<form class="bg-white p-6 rounded flex flex-col gap-4 w-full h-full">
+    <div class="flex justify-between">
+        <div class="flex gap-2">
+            <lucide-icon [img]="SlidersHorizontal" class="stroke-slate-400">
+            </lucide-icon>
+            <p class="text-base font-semibold text-gray-400">Filters</p>
+        </div>
+        <button class="text-base hover:text-blue-600
+        text-blue-400 transition-colors duration-500"
+        (click)="onClearAll($event)">
+            Clear All
+        </button>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <h1 class="text-sm font-bold">User Type</h1>
+
+        <div>
+            <input type="radio" class="mr-2" name="userType"
+            (change)="onUserTypeChange('Internal User')">
+            <label for="Internal User" class="text-sm font-light"
+            >Internal User</label>
+        </div>
+
+        <div>    
+            <input type="radio" class="mr-2" name="userType"
+            (change)="onUserTypeChange('Customer')">
+            <label for="Customer" class="text-sm font-light"
+            >Customer</label>
+        </div>
+    </div>
+    
+    <app-filter-dropdown criteriaLabel="User Details"
+    placeholder="Select User"
+    (selectedFilters)="onDropdownFilter($event)">
+`   </app-filter-dropdown>
+    <app-filter-dropdown criteriaLabel="Roles"
+    placeholder="Select Role"
+    (selectedFilters)="onDropdownFilter($event)"
+    ></app-filter-dropdown>
+
+    <div class="flex flex-col gap-2">
+        <h1 class="text-sm font-bold">Status</h1>
+
+        <div>
+            <input type="radio" class="mr-2" name="status"
+            (change)="onStatusChange('Active')">
+            <label for="Internal User" class="text-sm font-light"
+            >Active</label>
+        </div>
+
+        <div>    
+            <input type="radio" class="mr-2" name="status"
+            (change)="onStatusChange('Inactive')">
+            <label for="Customer" class="text-sm font-light"
+            >Inactive</label>
+        </div>
+    </div>
+</form>

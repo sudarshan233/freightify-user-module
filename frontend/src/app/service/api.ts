@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FilterType, Response } from '../models/user.types';
 
 type User = {
 	userType: string
@@ -42,5 +43,18 @@ export class Api {
 
   deleteUser(id: string) {
     return this.http.delete(`${this.serverUrl}users/${id}`)
+  }
+
+  filterUser(filters: FilterType) {
+	
+	let params = new HttpParams;
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get(`${this.serverUrl}users/filter`, { params });
   }
 }

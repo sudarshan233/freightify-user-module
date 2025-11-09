@@ -1,52 +1,100 @@
+<p class="px-2 py-4 text-sm font-medium">{{numberOfUsers()}} Users Found</p>
 <table class="bg-white rounded">
         <tr class="border-x-0 border-t-0 border-b border-gray-300">
-                <td class="py-4 px-14 font-bold">Name</td>
-                <td class="py-4 px-14 font-bold">Email</td>
-                <td class="py-4 px-14 font-bold">Role</td>
-                <td class="py-4 px-14 font-bold">Created On</td>
-                <td class="py-4 px-14 font-bold">Status</td>
-                <td class="py-4 px-14 font-bold">Actions</td>
+                <td class="py-4 px-10 font-bold">Name</td>
+                <td class="py-4 px-10 font-bold">Email</td>
+                <td class="py-4 px-10 font-bold">Role</td>
+                <td class="py-4 px-10 font-bold">Created On</td>
+                <td class="py-4 px-10 font-bold">Status</td>
+                <td class="py-4 px-10 font-bold">Actions</td>
         </tr>
-        @for(user of users; track $index) {
-        <tr class="border-x-0 border-t-0 border-b border-gray-300">
-                <td class="py-4 px-14 font-extralight">{{user.firstName + ' ' + user.lastName}}</td>
-                <td class="py-4 px-14 font-extralight">{{user.email}}</td>
-                <td class="py-4 px-14 font-extralight">{{user.userRole}}</td>
-                <td class="py-4 px-14 font-extralight">{{
-                  user.createdAt.toISOString().split('T')[0]
-                  }}</td>
-                @if (user.userStatus) {
-                        <td class="py-4 px-14
-                        font-light text-green-500">Active</td>
-                } @else {
-                        <td class="py-4 px-14
-                        font-light text-red-500">Inactive</td>
-                }
-                <td class="py-4 px-14 font-extralight flex gap-2">
-                  <div class="hover:bg-gray-200 bg-white transition-colors
-                  duration-500 rounded-full p-1 size-6 cursor-pointer"
-                       (click)="editUserModal(user)">
-                    <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
+        @if(filteredUsers.length === 0) {
+                @for(user of users; track $index) {
+                <tr class="border-x-0 border-t-0 border-b border-gray-300
+                text-sm">
+                        <td class="py-4 px-10 font-extralight">{{user.firstName + ' ' + user.lastName}}</td>
+                        <td class="py-4 px-10 font-extralight">{{user.email}}</td>
+                        <td class="py-4 px-10 font-extralight">{{user.userRole}}</td>
+                        <td class="py-4 px-10 font-extralight">{{
+                        user.createdAt.toISOString().split('T')[0]
+                        }}</td>
+                        @if (user.userStatus) {
+                                <td class="py-4 px-10
+                                font-light text-green-500">Active</td>
+                        } @else {
+                                <td class="py-4 px-10
+                                font-light text-red-500">Inactive</td>
+                        }
+                        <td class="py-4 px-10 font-extralight flex gap-2">
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="editUserModal(user)">
+                        <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
 
-                    </lucide-icon>
-                  </div>
-                  <div class="hover:bg-gray-200 bg-white transition-colors
-                  duration-500 rounded-full p-1 size-6 cursor-pointer"
-                       (click)="viewUserModal(user)">
-                    <lucide-icon [img]="Eye" class="size-4 stroke-black">
+                        </lucide-icon>
+                        </div>
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="viewUserModal(user)">
+                        <lucide-icon [img]="Eye" class="size-4 stroke-black">
 
-                    </lucide-icon>
-                  </div>
-                  <div class="hover:bg-gray-200 bg-white transition-colors
-                  duration-500 rounded-full p-1 size-6 cursor-pointer"
-                  (click)="deleteUser(user)">
-                    <lucide-icon [img]="Trash" class="size-4 stroke-black">
+                        </lucide-icon>
+                        </div>
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="deleteUser(user)">
+                        <lucide-icon [img]="Trash" class="size-4 stroke-black">
 
-                    </lucide-icon>
-                  </div>
-                </td>
+                        </lucide-icon>
+                        </div>
+                        </td>
 
-        </tr>
-        <hr />
-}
+                </tr>
+                <hr />
+                }       
+        } @else {
+                @for(filteredUser of filteredUsers; track $index) {
+                <tr class="border-x-0 border-t-0 border-b border-gray-300
+                text-sm">
+                        <td class="py-4 px-10 font-extralight">{{filteredUser.firstName + ' ' + filteredUser.lastName}}</td>
+                        <td class="py-4 px-10 font-extralight">{{filteredUser.email}}</td>
+                        <td class="py-4 px-10 font-extralight">{{filteredUser.userRole}}</td>
+                        <td class="py-4 px-10 font-extralight">{{
+                        filteredUser.createdAt.toISOString().split('T')[0]
+                        }}</td>
+                        @if (filteredUser.userStatus) {
+                                <td class="py-4 px-10
+                                font-light text-green-500">Active</td>
+                        } @else {
+                                <td class="py-4 px-10
+                                font-light text-red-500">Inactive</td>
+                        }
+                        <td class="py-4 px-10 font-extralight flex gap-2">
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="editUserModal(filteredUser)">
+                        <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
+
+                        </lucide-icon>
+                        </div>
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="viewUserModal(filteredUser)">
+                        <lucide-icon [img]="Eye" class="size-4 stroke-black">
+
+                        </lucide-icon>
+                        </div>
+                        <div class="hover:bg-gray-200 bg-white transition-colors
+                        duration-500 rounded-full p-1 size-6 cursor-pointer"
+                        (click)="deleteUser(filteredUser)">
+                        <lucide-icon [img]="Trash" class="size-4 stroke-black">
+
+                        </lucide-icon>
+                        </div>
+                        </td>
+
+                </tr>
+                <hr />
+        }
+        }
 </table>

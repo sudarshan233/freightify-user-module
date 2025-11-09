@@ -12,20 +12,20 @@ import (
 
 type User struct {
 	ID                primitive.ObjectID    `json:"id,omitempty" bson:"_id,omitempty"`
-	UserType          string 				`json:"userType"`
-	UserRole          string 				`json:"userRole"`
-	FirstName         string 				`json:"firstName"`
-	LastName          string 				`json:"lastName"`
-	PhoneNumber       int64  				`json:"phoneNumber"`
-	EmailID           string 				`json:"email"`
-	Password          string 				`json:"password"`
-	ConfirmPassword   string 				`json:"confirmPassword"`
-	UserCurrency      string 				`json:"userCurrency"`
-	NumberFormat      string 				`json:"numberFormat"`
-	MeasurementSystem string 				`json:"measurementSystem"`
-	DecimalPlaces     int    				`json:"decimalPlaces"`
-	UserStatus        bool   				`json:"userStatus"`
-	UserTeam          []string 				`json:"userTeam"`
+	UserType          string 				`json:"userType" bson:"userType"` 
+	UserRole          string 				`json:"userRole" bson:"userRole"`
+	FirstName         string 				`json:"firstName" bson:"firstName"`
+	LastName          string 				`json:"lastName" bson:"lastName"`
+	PhoneNumber       int64  				`json:"phoneNumber" bson:"phoneNumber"`
+	EmailID           string 				`json:"email" bson:"email"`
+	Password          string 				`json:"password" bson:"password"`
+	ConfirmPassword   string 				`json:"confirmPassword" bson:"confirmPassword"`
+	UserCurrency      string 				`json:"userCurrency" bson:"userCurrency"`
+	NumberFormat      string 				`json:"numberFormat" bson:"numberFormat"`
+	MeasurementSystem string 				`json:"measurementSystem" bson:"measurementSystem"`
+	DecimalPlaces     int    				`json:"decimalPlaces" bson:"decimalPlaces"`
+	UserStatus        bool   				`json:"userStatus" bson:"userStatus"`
+	UserTeam          []string 				`json:"userTeam" bson:"userTeam"`
 	CreatedAt         time.Time 			`bson:"createdAt" json:"createdAt"`
 	UpdatedAt         time.Time 			`bson:"updatedAt" json:"updatedAt"`
 }
@@ -171,5 +171,68 @@ func RemoveUser(c *gin.Context) {
 	c.JSON(200, gin.H {
 		"success": true,
 		"message": "User data deleted successfully",
+	})
+}
+
+func FilterUsers(c *gin.Context) {
+	query := bson.M{}
+
+	// Get query parameters
+	userType := c.Query("userType")
+	userRole := c.Query("userRole")
+	userStatus := c.Query("userStatus")
+	search := c.Query("search") 
+
+	if userType != "" {
+		query["userType"] = userType
+	}
+
+	if userRole != "" {
+		query["userRole"] = userRole
+	}
+
+	if userStatus != "" {
+		switch userStatus {
+			case "true":
+				query["userStatus"] = true
+			case "false":	
+				query["userStatus"] = false
+		}
+	}
+
+	if search != "" {
+
+		query["$or"] = []bson.M{
+			{"firstName": bson.M{"$regex": search, "$options": "i"}},
+			{"lastName": bson.M{"$regex": search, "$options": "i"}},
+			{"email": bson.M{"$regex": search, "$options": "i"}},
+		}
+	}
+
+	cursor, err := config.Collection.Find(context.Background(), query)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Failed to fetch filtered users",
+			"error":   err.Error(),
+		})
+		return
+	}
+	defer cursor.Close(context.Background())
+
+	var users []User
+	if err := cursor.All(context.Background(), &users); err != nil {
+		c.JSON(500, gin.H{
+			"success": false,
+			"message": "Failed to decode users",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"count":   len(users),
+		"users":   users,
 	})
 }

@@ -6,10 +6,13 @@ import { UserModal } from './components/user-modal/user-modal';
 import { CommonModule } from '@angular/common';
 import {Response} from './models/user.types';
 import {Api} from './service/api';
+import { Filter } from './components/filter/filter';
 
 @Component({
   selector: 'app-root',
-  imports: [Header, InputButtons, Table, UserModal, CommonModule],
+  imports: [Header, InputButtons, Table, UserModal, CommonModule,
+    Filter
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

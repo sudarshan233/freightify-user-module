@@ -27,6 +27,13 @@ export type Response = {
   updatedAt: Date
 }
 
+export type FilterType = {
+  userType?: string,
+  userRole?: string,
+  userStatus?: boolean
+  search?: string
+}
+
 export interface CustomErrorHandler {
   errorStatus: boolean,
   errorLocation: string[]

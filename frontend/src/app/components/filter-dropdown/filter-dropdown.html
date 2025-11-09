@@ -1,0 +1,95 @@
+    <div class="flex flex-col gap-2">
+        <h1 class="text-sm font-bold">{{criteriaLabel}}</h1>
+
+        <div class="flex relative">
+            <input class="text-sm p-2 w-full
+            border border-1 border-gray-300 rounded outline-0"
+            (click)="onClickSearch()" placeholder={{placeholder}}/>
+            
+            <lucide-icon [img]="Search" class="absolute top-1/4
+            right-1 stroke-blue-400">
+            </lucide-icon>
+
+            @if (selectDropDown) {
+
+                <div class="bg-white max-h-48 
+                absolute z-50 top-1/3 w-full drop-shadow-lg">
+                    <ul class="list-none max-h-48 scrollbar-thin 
+                    scrollbar-thumb-blue-400 scrollbar-track-white
+                    overflow-y-scroll">
+                        @if (criteriaLabel === 'User Details') {
+                        @for (user of users; track $index) {
+                            <div
+                                class="hover:bg-slate-200 bg-white 
+                                transition-colors duration-300 
+                                cursor-pointer flex items-center gap-2 p-4"
+                                (click)="selectUser(user, $event)">
+                                <div
+                                class="size-4 rounded border 
+                                border-gray-300"
+                                [ngClass]="{ 
+                                    'bg-blue-500': isUserSelected(user) 
+                                }"
+                                ></div>
+                                <div>
+                                <li class="font-light text-xs">
+                                    {{ user.firstName }} {{ user.lastName }}
+                                </li>
+                                <li class="font-light text-xs">
+                                    {{ user.email }}
+                                </li>
+                                </div>
+                            </div>
+                        }
+                        } @else if (criteriaLabel === 'Roles') {
+                            @for (role of roles; track $index) {
+                                <div
+                                    class="hover:bg-slate-200 
+                                    bg-white transition-colors duration-300 
+                                    cursor-pointer flex items-center gap-2 p-4"
+                                    (click)="selectUserRole(role, $event)"
+                                >
+                                    <div
+                                    class="size-4 rounded border 
+                                    border-gray-300"[ngClass]="{ 
+                                        'bg-blue-500': isUserRoleSelected(role) 
+                                    }"
+                                    ></div>
+                                    <li class="font-light text-xs">
+                                        {{ role }}
+                                    </li>
+                                </div>
+                            }
+                        }
+                    </ul>
+                    <button class="fixed bg-blue-400 w-full
+                    p-2 text-white" (click)="onConfirmFilter($event)">Done</button>
+                </div>
+            }   
+        </div>
+        @if(!selectDropDown && criteriaLabel === 'User Details') {
+            @for(selectedUser of selectedUsers; track $index){
+                <div class="flex justify-between rounded-2xl bg-slate-200
+                p-2 transition-all duration-700 ease-in-out
+                border border-blue-400">
+                    <p class="text-xs font-light cursor-pointer"
+                    >{{selectedUser}}</p>
+                    <lucide-icon [img]="X" class="stroke-blue-400
+                    size-4" (click)="onRemoveUser(selectedUser)">
+                    </lucide-icon>
+                </div>
+            }
+        } @else if(!selectDropDown && criteriaLabel === 'Roles') {
+            @for(selectedUserRole of selectedUserRoles; track $index){
+                <div class="flex justify-between rounded-2xl bg-slate-200
+                p-2 transition-all duration-700 ease-in-out
+                border border-blue-400">
+                    <p class="text-xs font-light cursor-pointer"
+                    >{{selectedUserRole}}</p>
+                    <lucide-icon [img]="X" class="stroke-blue-400
+                    size-4" (click)="onRemoveUserRole(selectedUserRole)">
+                    </lucide-icon>
+                </div>
+            }
+        }
+    </div>

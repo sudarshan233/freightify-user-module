@@ -3,7 +3,7 @@ import { Api } from '../../service/api';
 
 import {LucideAngularModule, UserRoundPen, Eye, Trash2} from 'lucide-angular';
 import {Response, User} from '../../models/user.types';
-import {users} from '../../models/user.data';
+import {filteredUsers, totalUsers, users} from '../../models/user.data';
 import { UserService } from '../../service/user-service';
 
 @Component({
@@ -19,6 +19,9 @@ export class Table {
   readonly Eye = Eye;
   readonly Trash = Trash2;
 
+  protected readonly users = users;
+  protected readonly filteredUsers = filteredUsers;
+
   @Output() toggleOnUserModal = new EventEmitter<{
     mode: 'edit' | 'view',
     user: Response
@@ -32,6 +35,7 @@ export class Table {
 
   apiService = inject(Api);
   userService = inject(UserService)
+  numberOfUsers = totalUsers
 
   ngOnInit(): void {
     this.userService.getUsers()
@@ -63,5 +67,4 @@ export class Table {
       this.userService.getUsers()
     });
   }
-  protected readonly users = users;
 }
