@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <app-user-modal *ngIf="showUserModal && selectedUser"
                 [mode]="modalMode"
                 [selectedUser]="selectedUser"
@@ -18,3 +21,5 @@
     ></app-table>
   </div>
 </div>
+
+<router-outlet></router-outlet>

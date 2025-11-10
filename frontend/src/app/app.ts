@@ -7,14 +7,19 @@ import { CommonModule } from '@angular/common';
 import {Response} from './models/user.types';
 import {Api} from './service/api';
 import { Filter } from './components/filter/filter';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   imports: [Header, InputButtons, Table, UserModal, CommonModule,
-    Filter
+    Filter, ToastModule, ConfirmDialogModule, RouterOutlet
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  providers: [MessageService, ConfirmationService]
 })
 export class App {
   protected readonly title = signal('frontend');

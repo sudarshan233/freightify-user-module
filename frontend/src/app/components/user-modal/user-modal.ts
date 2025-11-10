@@ -17,22 +17,26 @@ import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { Api } from '../../service/api';
 import {Response} from '../../models/user.types';
-import {errorHandler, users} from '../../models/user.data';
+import {errorHandler} from '../../models/user.data';
+
+import { PopUp } from '../../service/pop-up';
 import { UserService } from '../../service/user-service';
 
 @Component({
   selector: 'app-user-modal',
   imports: [Dropdown, TypingInput, PasswordCriteria, PasswordStrengthBar,
-    CommonModule, LucideAngularModule, FormsModule
+    CommonModule, LucideAngularModule, FormsModule,
   ],
   templateUrl: './user-modal.html',
-  styleUrl: './user-modal.css'
+  styleUrl: './user-modal.css',
 })
 export class UserModal implements OnChanges {
   readonly X = X;
 
   apiService = inject(Api);
-  userService = inject(UserService)
+  userService = inject(UserService);
+  popupService = inject(PopUp)
+
   private cdr = inject(ChangeDetectorRef);
 
   @Input() mode!: 'create' | 'edit' | 'view'
@@ -256,8 +260,10 @@ export class UserModal implements OnChanges {
         createdAt: new Date(Date.now()),
         updatedAt: new Date(Date.now())
       }).subscribe((res: any) => {
-        alert("User Created Successfully")
-        
+        this.popupService.showSuccessPopup(
+          "User Created",
+          "User has been created successfully"
+        )
         this.userService.getUsers()
       })
 
@@ -279,12 +285,12 @@ export class UserModal implements OnChanges {
         userTeam: this.selectedUserTeams,
         updatedAt: new Date(Date.now())
       }, this.selectedUser.id).subscribe((res: any) => {
-        alert("User Updated Successfully")
-
         this.userService.getUsers()
-        
       })
-
+      this.popupService.showSuccessPopup(
+          "User Edited",
+          "User has been edited successfully"
+      )
       this.toggleOffUserModal.emit()
     }
   }
