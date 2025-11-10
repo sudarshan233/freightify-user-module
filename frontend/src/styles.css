@@ -1,13 +1,3 @@
-/* ✅ PrimeNG 20 Theme (from @primeuix/styles) */
-@import "@primeuix/styles/themes/lara-light-blue/theme.css";
-
-/* ✅ PrimeNG Core Styles */
-@import "@primeuix/styles/primeng.css";
-
-/* ✅ PrimeIcons */
-@import "primeicons/primeicons.css";
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
