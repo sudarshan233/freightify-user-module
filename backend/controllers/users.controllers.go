@@ -176,44 +176,49 @@ func RemoveUser(c *gin.Context) {
 
 func FilterUsers(c *gin.Context) {
 	query := bson.M{}
+	andConditions := []bson.M{} // collects all AND clauses
 
-	// Get query parameters
 	userType := c.Query("userType")
 	userRole := c.Query("userRole")
 	userStatus := c.Query("userStatus")
-	search := c.Query("search") 
+	search := c.Query("search")
 
 	if userType != "" {
-		query["userType"] = userType
+		andConditions = append(andConditions, bson.M{"userType": userType})
 	}
 
 	if userRole != "" {
-		query["userRole"] = userRole
+		andConditions = append(andConditions, bson.M{"userRole": userRole})
 	}
 
 	if userStatus != "" {
 		switch userStatus {
-			case "true":
-				query["userStatus"] = true
-			case "false":	
-				query["userStatus"] = false
+		case "true":
+			andConditions = append(andConditions, bson.M{"userStatus": true})
+		case "false":
+			andConditions = append(andConditions, bson.M{"userStatus": false})
 		}
 	}
 
 	if search != "" {
-
-		query["$or"] = []bson.M{
-			{"firstName": bson.M{"$regex": search, "$options": "i"}},
-			{"lastName": bson.M{"$regex": search, "$options": "i"}},
-			{"email": bson.M{"$regex": search, "$options": "i"}},
+		searchCondition := bson.M{
+			"$or": []bson.M{
+				{"firstName": bson.M{"$regex": search, "$options": "i"}},
+			},
 		}
+		andConditions = append(andConditions, searchCondition)
+	}
+
+	// Combine all AND conditions
+	if len(andConditions) > 0 {
+		query["$and"] = andConditions
 	}
 
 	cursor, err := config.Collection.Find(context.Background(), query)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"success": false,
-			"message": "Failed to fetch filtered users",
+			"message": "Database query failed",
 			"error":   err.Error(),
 		})
 		return

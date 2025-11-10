@@ -22,6 +22,8 @@ export class UserService {
   }
 
   getFilteredUsers(filter: FilterType) {
+    filteredUsers.length = 0;
+
     this.apiService.filterUser(filter).subscribe((res: any) => {
       res.users.forEach((user: any) => {
         const newUser = {
@@ -29,7 +31,6 @@ export class UserService {
           createdAt: new Date(user.createdAt)
         };
 
-        // ✅ Check for duplicates before pushing
         const exists = filteredUsers.some(
           (existing: Response) => existing.id === newUser.id
         );
