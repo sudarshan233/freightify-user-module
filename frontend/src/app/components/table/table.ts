@@ -5,10 +5,12 @@ import {LucideAngularModule, UserRoundPen, Eye, Trash2} from 'lucide-angular';
 import {Response, User} from '../../models/user.types';
 import {filteredUsers, totalUsers, users} from '../../models/user.data';
 import { UserService } from '../../service/user-service';
+import { NgTemplates } from '../../service/ng-templates';
+import { ButtonModule } from 'primeng/button'; 
 
 @Component({
   selector: 'app-table',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, ButtonModule],
   templateUrl: './table.html',
   styleUrl: './table.css'
 })
@@ -22,8 +24,10 @@ export class Table {
   protected readonly users = users;
   protected readonly filteredUsers = filteredUsers;
 
+  ngTemplateService = inject(NgTemplates)
+
   @Output() toggleOnUserModal = new EventEmitter<{
-    mode: 'edit' | 'view',
+    mode: 'edit' | 'view' ,
     user: Response
   }>();
 
@@ -60,11 +64,8 @@ export class Table {
     console.log('Viewing user')
   }
 
-  deleteUser(user: Response) {
-    console.log(user)
-    this.apiService.deleteUser(user.id).subscribe((res: any) => {
-      alert("User has been deleted successfully!");
-      this.userService.getUsers()
-    });
+  onDeleteUser(user: Response) {
+    console.log("Deleting user")
+    this.ngTemplateService.confirm(user)
   }
 }

@@ -16,10 +16,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { Api } from '../../service/api';
+
 import {Response} from '../../models/user.types';
 import {errorHandler} from '../../models/user.data';
 
-import { PopUp } from '../../service/pop-up';
+import { NgTemplates } from '../../service/ng-templates';
 import { UserService } from '../../service/user-service';
 
 @Component({
@@ -35,11 +36,11 @@ export class UserModal implements OnChanges {
 
   apiService = inject(Api);
   userService = inject(UserService);
-  popupService = inject(PopUp)
+  ngToastService = inject(NgTemplates)
 
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() mode!: 'create' | 'edit' | 'view'
+  @Input() mode!: 'create' | 'edit' | 'view' | 'delete'
   @Input() selectedUser!: Response;
   @Output() toggleOffUserModal = new EventEmitter<boolean>();
 
@@ -260,10 +261,7 @@ export class UserModal implements OnChanges {
         createdAt: new Date(Date.now()),
         updatedAt: new Date(Date.now())
       }).subscribe((res: any) => {
-        this.popupService.showSuccessPopup(
-          "User Created",
-          "User has been created successfully"
-        )
+        this.ngToastService.show("User Profile Created Successfully")
         this.userService.getUsers()
       })
 
@@ -287,10 +285,7 @@ export class UserModal implements OnChanges {
       }, this.selectedUser.id).subscribe((res: any) => {
         this.userService.getUsers()
       })
-      this.popupService.showSuccessPopup(
-          "User Edited",
-          "User has been edited successfully"
-      )
+      this.ngToastService.show("User Profile Edited Successfully")
       this.toggleOffUserModal.emit()
     }
   }

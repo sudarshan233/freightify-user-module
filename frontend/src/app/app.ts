@@ -11,15 +11,16 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RouterOutlet } from '@angular/router';
+import { ConfirmDialogTemplateDemo } from './components/confirm-dialog-template-demo/confirm-dialog-template-demo';
 
 @Component({
   selector: 'app-root',
   imports: [Header, InputButtons, Table, UserModal, CommonModule,
-    Filter, ToastModule, ConfirmDialogModule, RouterOutlet
-  ],
+    Filter, ToastModule, ConfirmDialogModule, RouterOutlet,
+     ConfirmDialogTemplateDemo],
   templateUrl: './app.html',
   styleUrl: './app.css',
-  providers: [MessageService, ConfirmationService]
+  providers: []
 })
 export class App {
   protected readonly title = signal('frontend');
@@ -45,7 +46,7 @@ export class App {
 
 
   showUserModal: boolean = false;
-  modalMode: 'view' | 'edit' | 'create' = 'create';
+  modalMode: 'view' | 'edit' | 'create' | 'delete' = 'create';
   selectedUser!: Response;
 
   users: Response[] = []
@@ -57,6 +58,7 @@ export class App {
     this.modalMode = mode;
     this.selectedUser = user;
     console.log("From App: ", this.selectedUser);
+    
     this.showUserModal = true;
   }
   toggleOffUserModal() {

@@ -1,4 +1,4 @@
-<p class="px-2 py-4 text-sm font-medium">{{numberOfUsers()}} Users Found</p>
+<p class="px-2 py-4 text-sm font-light">{{numberOfUsers()}} Users Found</p>
 <table class="bg-white rounded">
         <tr class="border-x-0 border-t-0 border-b border-gray-300">
                 <td class="py-4 px-10 font-bold">Name</td>
@@ -26,27 +26,29 @@
                                 font-light text-red-500">Inactive</td>
                         }
                         <td class="py-4 px-10 font-extralight flex gap-2">
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="editUserModal(user)">
-                        <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
+                                <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="editUserModal(user)">
+                                <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
 
-                        </lucide-icon>
-                        </div>
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="viewUserModal(user)">
-                        <lucide-icon [img]="Eye" class="size-4 stroke-black">
+                                </lucide-icon>
+                                </div>
+                                <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="viewUserModal(user)">
+                                <lucide-icon [img]="Eye" class="size-4 stroke-black">
 
-                        </lucide-icon>
-                        </div>
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="deleteUser(user)">
-                        <lucide-icon [img]="Trash" class="size-4 stroke-black">
-
-                        </lucide-icon>
-                        </div>
+                                </lucide-icon>
+                                </div>
+                               <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="onDeleteUser(user)" label="Delete">
+                                <lucide-icon [img]="Trash" class="size-4 
+                                stroke-black">
+                                                
+                                 </lucide-icon>
+                                        
+                                </div>
                         </td>
 
                 </tr>
@@ -70,27 +72,29 @@
                                 font-light text-red-500">Inactive</td>
                         }
                         <td class="py-4 px-10 font-extralight flex gap-2">
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="editUserModal(filteredUser)">
-                        <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
+                                <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="editUserModal(filteredUser)">
+                                <lucide-icon [img]="UserRoundPen" class="size-4 stroke-black">
 
-                        </lucide-icon>
-                        </div>
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="viewUserModal(filteredUser)">
-                        <lucide-icon [img]="Eye" class="size-4 stroke-black">
+                                </lucide-icon>
+                                </div>
+                                <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="viewUserModal(filteredUser)">
+                                <lucide-icon [img]="Eye" class="size-4 stroke-black">
 
-                        </lucide-icon>
-                        </div>
-                        <div class="hover:bg-gray-200 bg-white transition-colors
-                        duration-500 rounded-full p-1 size-6 cursor-pointer"
-                        (click)="deleteUser(filteredUser)">
-                        <lucide-icon [img]="Trash" class="size-4 stroke-black">
-
-                        </lucide-icon>
-                        </div>
+                                </lucide-icon>
+                                </div>
+                                <div class="hover:bg-gray-200 bg-white transition-colors
+                                duration-500 rounded-full p-1 size-6 cursor-pointer"
+                                (click)="onDeleteUser(filteredUser)" label="Delete">
+                                <lucide-icon [img]="Trash" class="size-4 
+                                stroke-black">
+                                                
+                                 </lucide-icon>
+                                        
+                                </div>
                         </td>
 
                 </tr>
