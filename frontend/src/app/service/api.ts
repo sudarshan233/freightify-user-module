@@ -47,10 +47,14 @@ export class Api {
 
   filterUser(filters: FilterType) {
 	
-	let params = new HttpParams;
+	  let params = new HttpParams;
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (Array.isArray(value)) {
+        value.forEach(v => {
+          params = params.append(key, v);
+        });
+      } else if (value !== undefined && value !== null && value !== "") {
         params = params.set(key, value.toString());
       }
     });
