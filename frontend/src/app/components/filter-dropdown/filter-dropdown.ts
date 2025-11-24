@@ -71,11 +71,11 @@ export class FilterDropdown {
 
     if (this.criteriaLabel === 'User Details' && this.selectedFirstNames.length > 0) {
       
-      filter.search = this.selectedFirstNames.join(' ');
+      filter.search = this.selectedFirstNames;
     } 
     else if (this.criteriaLabel === 'Roles' && this.selectedUserRoles.length > 0) {
      
-      filter.userRole = this.selectedUserRoles.join(',');
+      filter.userRole = this.selectedUserRoles;
     }
 
     this.selectedFilters.emit(filter)

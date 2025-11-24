@@ -176,43 +176,55 @@ func RemoveUser(c *gin.Context) {
 
 func FilterUsers(c *gin.Context) {
 	query := bson.M{}
-	andConditions := []bson.M{} // collects all AND clauses
+	andConditions := []bson.M{}
 
-	userType := c.Query("userType")
-	userRole := c.Query("userRole")
-	userStatus := c.Query("userStatus")
-	search := c.Query("search")
+	userTypes := c.QueryArray("userType")
+	userRoles := c.QueryArray("userRole")
+	userStatuses := c.QueryArray("userStatus")
+	searchTerms := c.QueryArray("search")
 
-	if userType != "" {
-		andConditions = append(andConditions, bson.M{"userType": userType})
-	}
+    if len(userTypes) > 0 {
+        andConditions = append(andConditions, bson.M{
+            "userType": bson.M{"$in": userTypes},
+        })
+    }
 
-	if userRole != "" {
-		andConditions = append(andConditions, bson.M{"userRole": userRole})
-	}
+    if len(userRoles) > 0 {
+        andConditions = append(andConditions, bson.M{
+            "userRole": bson.M{"$in": userRoles},
+        })
+    }
 
-	if userStatus != "" {
-		switch userStatus {
-		case "true":
-			andConditions = append(andConditions, bson.M{"userStatus": true})
-		case "false":
-			andConditions = append(andConditions, bson.M{"userStatus": false})
-		}
-	}
+    if len(userStatuses) > 0 {
+        var bools []bool
+        for _, s := range userStatuses {
+            switch s {
+				case "true":
+                	bools = append(bools, true)
+            	case "false":
+                	bools = append(bools, false)
+            }
+        }
+        if len(bools) > 0 {
+            andConditions = append(andConditions, bson.M{
+                "userStatus": bson.M{"$in": bools},
+            })
+        }
+    }
 
-	if search != "" {
-		searchCondition := bson.M{
-			"$or": []bson.M{
-				{"firstName": bson.M{"$regex": search, "$options": "i"}},
-			},
-		}
-		andConditions = append(andConditions, searchCondition)
-	}
+    if len(searchTerms) > 0 {
+        var searchOr []bson.M
+        for _, term := range searchTerms {
+            searchOr = append(searchOr, bson.M{
+                "firstName": bson.M{"$regex": term, "$options": "i"},
+            })
+        }
+        andConditions = append(andConditions, bson.M{"$or": searchOr})
+    }
 
-	// Combine all AND conditions
-	if len(andConditions) > 0 {
-		query["$and"] = andConditions
-	}
+    if len(andConditions) > 0 {
+        query["$and"] = andConditions
+    }
 
 	cursor, err := config.Collection.Find(context.Background(), query)
 	if err != nil {

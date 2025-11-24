@@ -29,9 +29,9 @@ export type Response = {
 
 export type FilterType = {
   userType?: string,
-  userRole?: string,
+  userRole?: string[],
   userStatus?: boolean
-  search?: string
+  search?: string[]
 }
 
 export interface CustomErrorHandler {
